@@ -4,8 +4,8 @@ Le principe derrière l'Event Sourcing existe depuis des décénnies et se retro
 
 Mes objectifs seront donc:
 
-* d'expliquer les différents challenges auxquels nous sommes confrontés;
-* comment ces patterns apportent des solutions;
+* parcourir les différents challenges auxquels nous sommes confrontés;
+* expliquer les solutions que l'event sourcing et cqrs apportent;
 * mettre en pratique ces patterns durant une session de live-coding;
 * partager mon retour d'expérience.
 
@@ -13,7 +13,7 @@ Durée: 1h30 - 2h
 
 == A propos de moi
 
-Développeur passionné, je suis particulièrement intéressé par le software craftmanship, le domaine driven design (DDD), le test-driven development (TDD) et la programmation fonctionnelle. J'aime apprendre ainsi que de partager mes expériences et mes idées. Durant mon temps libre, quand je ne suis pas en train de coder du Java, Scala ou encore Haskell; je suis probablement en train de courrir, nager, faire du vélo... ou manger et boire (ce qui est le plus probable, je l'avoue).
+Développeur passionné, je suis particulièrement intéressé par le software craftmanship, le domaine driven design (DDD), le test-driven development (TDD) et la programmation fonctionnelle. J'aime apprendre ainsi que de partager mes expériences et mes idées. Durant mon temps libre, quand je ne suis pas en train de coder en Java, Scala ou encore Haskell, je suis probablement en train de courrir, nager, faire du vélo... ou manger et boire (ce qui est le plus probable, je l'avoue).
 
 Comment me contacter:
 
