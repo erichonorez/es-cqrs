@@ -3,16 +3,15 @@
 Le principe derrière l'Event Sourcing existe depuis des décénnies et se retrouve être aux fondements de l'implémentation des systèmes de base de données mais aussi d'autres systèmes distribués comme Git. En suivant ce principe, nous ne sauvegardons plus un état à un instant `T` mais la suite des évènements qui ont modifié cet état. Super simple en théorie, il débloque un grand nombre de possibilités qui n'existe pas avec la manière dont nous envisagions, généralement, la persistence de l'état d'une application. Couplé au style d'architecture CQRS, ce duo devient de plus en plus populaire dans le développement logiciel.
 
 Mes objectifs seront donc:
+
 * d'expliquer les différents challenges auxquels nous sommes confrontés;
 * comment ces patterns apportent des solutions;
 * mettre en pratique ces patterns durant une session de live-coding;
 * partager mon retour d'expérience.
 
-
 Eric Honorez
 
-Je suis développeur, passionné par le software craftmanship, le domaine driven design (DDD), le test-driven development (TDD). Développer est une addiction, apprendre est une passion, partager ce que j'apprends est XXX et sortir de ma zone de confort est un hobby.
+Développeur passionné, je suis particulièrement intéressé par le software craftmanship, le domaine driven design (DDD), le test-driven development (TDD) et la programmation fonctionnelle. J'aime apprendre ainsi que de partager mes expériences et mes idées. Durant mon temps libre, quand je ne suis pas en train de coder du Java, Scala ou encore Haskell; je suis probablement en train de courrir, nager, faire du vélo... ou manger et boire (ce qui est le plus probable, je l'avoue).
 
-Audience: développeur tout niveau et tout autre personne intéressée par la technique.
 
-Durée: 1h30
+Durée: 1h30 - 2h
