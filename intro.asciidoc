@@ -10,6 +10,7 @@ Mes objectifs seront donc:
 * partager mon retour d'expérience.
 
 Durée: 1h30 - 2h
+Audience: Développeurs
 
 == A propos de moi
 
