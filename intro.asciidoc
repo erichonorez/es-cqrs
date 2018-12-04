@@ -1,4 +1,4 @@
-= Event Sourcing and CQRS
+= Event Sourcing et CQRS
 
 Le principe derrière l'Event Sourcing existe depuis des décénnies et se retrouve être aux fondements de l'implémentation des systèmes de base de données mais aussi d'autres systèmes distribués comme Git. En suivant ce principe, nous ne sauvegardons plus un état à un instant `T` mais la suite des évènements qui ont modifié cet état. Super simple en théorie, il débloque un grand nombre de possibilités qui n'existe pas avec la manière dont nous envisagions, généralement, la persistence de l'état d'une application. Couplé au style d'architecture CQRS, ce duo devient de plus en plus populaire dans le développement logiciel.
 
