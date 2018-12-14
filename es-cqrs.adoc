@@ -1,0 +1,46 @@
+= Event Sourcing et CQRS
+
+== Qu'est-ce qu'un log?
+
+Le logging est souvent quelque chose que nous négligeons, nous, développeur. Pourtant ils s'avèrent être indispensable lorsque nous devons comprendre pourquoi l'application ne se comporte pas de la manière dont nous espérions. Nous pouvons aller voir en base de données quel est l'état du système mais bien souvent cela n'est pas suffisant. Pour les cas non triviaux, observer les données actuelles ne nous permet pas de comprendre comment et pourquoi l'état de l'application est ce qu'il est maintenant. Ce qu'il manque comment information c'est le passé. Autrement dit, la séquence des évènements qui se sont produit. C'est eux que nous espérons trouver dans nos fichiers de log, c'est eux qui nous premettront de comprendre le présent.
+
+Ce type de logs, utilisé pour le debugging, est destiné être lu et interprété par des humains. Ils ne sont pas "programmatiquement" exploitable. Cependant, depuis des décénnies, les logs sont la pierre angulaire de nombreux systèmes. Si on abstrait le concept, un log peut être définis comme une séquence d'enregistrements ordonnés par la date à laquelle ils se sont produits. Cette séquence ne supporte que l'ajout de nouveaux enregistrements.
+
+Un de ces systèmes nous est bien famillier, il s'agit de git. le log de git est composé d'une séquence de commits qui ont modifié les fichiers versionnés. Lorsqu'on checkout une branche, la version des fichiers sur cette branche est obtenue en appliquant séquentiellement les commits sur une version d'origine. Git est probablement le système *event sourcé* que nous utilisons le plus souvent.
+
+== Qu'est que l'event sourcing?
+
+L'event sourcing consiste à appliquer ce concept de log à la persistence de l'état d'une application. Au lieu d'enregistrer cet état dans des tables en base de données, on va simplement enregistrer la séquence des évènement qui ont modifié celui-ci. Lorsqu'on veut avoir l'état actuel du système, il suffit de récupérer les évènements et les appliquer à un état initial.
+
+== Un exemple: l'issue tracker de github
+
+Nous allons mettre ce pattern en pratique en implémentant l'issue tracker de github. Voici une liste non-exhaustive des fonctionnalités exposées par ce module:
+
+* Soumettre une issue
+* Commenter une issue
+* Assigner une issue
+* Catégoriser une issue
+* Plannifer une issue
+* Fermer une issue
+
+Chacun de ces cas d'utilisation est détaillé dans un test unitaire associé.
+
+== Que retenir de cet exemple ?
+
+=== Les évènements sont des faits business
+
+Un évènement est quelque chose qui s'est passé, c'est pour cela qu'il est une bonne pratique d'utiliser des verbes au passé. Par ailleurs, ils ont tous une signification business. Leur nom évoque des fait réels du domaine.
+
+=== Les faits sont les faits
+
+Une fois qu'un évènement s'est produit, il ne peut être nié, supprimé ou changé. Un évènement est immuable ainsi que le log. Le log est une structure "append only".Lorsqu'on veut corriger ce qu'il s'est produit dans le passé, on crée de nouveaux évènements.
+    
+== Mais pourquoi?
+
+=== Log on steroids & Audit trail
+
+=== No more impedance mismatch
+
+=== Focus on behavior
+
+== Pourquoi est-ce hype aujourd'hui?
