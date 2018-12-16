@@ -25,6 +25,88 @@ Nous allons mettre ce pattern en pratique en implémentant l'issue tracker de gi
 
 Chacun de ces cas d'utilisation est détaillé dans un test unitaire associé.
 
+Passons d'abord un moment sur un exemple de code sans event sourcing. Une `Issue` est une entité qui pourrait être représentée comme suit (cette représentation est volontairement simplifiée) :
+
+.Issue.scala
+[source,scala]
+---
+/**
+  * Issue is an entity. It is fetched and persisted from the database using a {@link Issuetrackerrepository}.
+  */
+case class Issue(
+  id: IssueId,
+  title: String,
+  author: UserId,
+  status: IssueStatus,
+  comments: List[String],
+  assigneees: List[UserId],
+  milestones: List[MilestoneId],
+  labels: List[String]
+)
+---
+
+La persistence de cette entité dans une base de données relationnelle va impliquer plusieurs tables et des relations entre chacunes. Une table `ISSUES`, une `MILESTONES`, une `USERS`, une `COMMENTS` et une `LABELS`. La table `ISSUES` aura des clés étrangères vers chacunes des autres. Bien que ce modèle soit intentionnellement simplifié, nous pouvons considérer qu'il soit assez proche de la réalité pour les besoin de cet exemple.
+
+Les opérations `CRUD` de cette entité en base de données sont abtraites derrière une interface `IssueTrackerRepository`:
+
+.Issue.scala
+[source,scala]
+---
+/**
+  * Interface for issue related database operations.
+  */
+trait IssueTrackerRepository {
+  def nextId(): IssueId
+  def persist(issue: Issue): Unit
+  def update(issue: Issue): Unit
+  def find(id: IssueId): Issue
+}
+---
+
+Le composant qui va implémenter la logique business (le cas d'utilisation) est implémenté dans le module `IssueTracker`. Pour la création d'une nouvelle issue, ce module reçoit la commande `Submit` de l'interface utilisateur, la valide, créer une nouvelle entité, la persiste en base de données et la retourne. Une séquence d'actions classique pour une opération de création.
+
+.Issue.scala
+[source,scala]
+---
+def handle(submit: Submit): Issue = {
+
+    // Validates the input parameters (author exists, repository exists and other business rules)
+    // ..
+
+    // Once validated create and issue
+    val issue = Issue(
+      issueTrackerRepository.nextId(),                               // <-- assigning a new issue identifier and a title and a author to this model implicitly means that a issue has been created
+      submit.title,
+      UserId("123"),
+      Open,                                                          // <-- implicitly means the issue has been closed yet
+      submit.commentO.map ((c: String) => List(c)) getOrElse List(), // <-- implicitly means the issue has been commented
+      submit.assignees,                                              // <-- implicitly means the issue has been assigned
+      submit.milestones,                                             // <-- implicitly means the issue has been planned
+      submit.categories                                              // <-- implicitly means the issue has been categorized
+    )
+
+    // persist it
+    issueTrackerRepository.persist(issue)
+
+    // return it
+    issue // <-- implicitly means all the events have been succe
+
+  }
+---
+
+Le fait est que dans cette implémentation beaucoup d'évènements implicites ce produisent:
+
+* créer une entité `Issue` en lui attribuant un identifiant unique, lui assignant le titre et le userId de la commande signifie que l'issue a été crée
+* si un commentaire existe, cela veut dire que l'`issue` a été commentée
+* si la liste des assignees n'est pas vide, cela veut dire que l'`issue` est assignée à chacun des utilisateur identifié par leur id
+* si la liste des milestones n'est pas vide, cela veut dire que l'`issue` est plannifiée dans chacun des milestones identifié par leur id
+* si la liste des catégorie n'est pas vide, cela veut dire que l'`issue` est catégorisée avec chacun des labels
+
+Je considère ces évènements comme __implicites__ car ils ne sont pas matérialisés par un symbole du langage. Nulle part, il y a un type qui représente ces évènements. Ceux-ci sont cachés derrière les affectations de paramètre. L'issue, n'est que la conséquence de ces évènements. Ce n'est qu'une vue possible, une projection, une matérialisation parmis tant d'autres.
+
+Essyons de transformer cet exemple en appliquant le pattern d'event sourcing.
+
+
 == Que retenir de cet exemple ?
 
 === Les évènements sont des faits business
@@ -34,7 +116,18 @@ Un évènement est quelque chose qui s'est passé, c'est pour cela qu'il est une
 === Les faits sont les faits
 
 Une fois qu'un évènement s'est produit, il ne peut être nié, supprimé ou changé. Un évènement est immuable ainsi que le log. Le log est une structure "append only".Lorsqu'on veut corriger ce qu'il s'est produit dans le passé, on crée de nouveaux évènements.
-    
+
+
+=== L'implicite devient explicite
+
+* tell don't ask
+
+=== Meilleure abstraction
+
+*
+
+=== Plus de code
+
 == Mais pourquoi?
 
 === Log on steroids & Audit trail
@@ -43,4 +136,11 @@ Une fois qu'un évènement s'est produit, il ne peut être nié, supprimé ou ch
 
 === Focus on behavior
 
+Connecte plus facile le langage business au code. 
+
 == Pourquoi est-ce hype aujourd'hui?
+
+
+== CQRS
+
+Si nous reprenons l'issue tracker de github, à chaque fois q'une issue est assignée ça veut dire que pour la vue "issue" il a un assignée qui est ajouté à la liste. Mais ça veut dire aussi que pour la vue "progression" les chiffres sont adaptés. Ca veut dire dans la liste des issue pour un milestone, une issue en plus est ajoutée. Pour un assignee, une nouvelle issue veut dire une nouvelle entrée quelque part dans son dashboard.
