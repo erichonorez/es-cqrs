@@ -31,9 +31,9 @@ trait IdentitySupplier {
 /**
   * User cases implementation
   */
-trait IssueTracker { this: Log with IdentitySupplier =>
+trait IssueTracker { this: Log with IdentitySupplier with Projection[Issue] =>
 
-  def handle(command: Submit): (List[Event]) = {
+  def handle(command: Submit): (List[Event], Issue) = {
 
     val id = nextId
 
@@ -69,10 +69,10 @@ trait IssueTracker { this: Log with IdentitySupplier =>
     val events = composition(List())
     append(events)
 
-    events
+    events -> apply(initState)(events)
   }
 
-  def handle(command: AddComment): (List[Event]) = {
+  def handle(command: AddComment): (List[Event], Issue) = {
     val events = fetch(command.issueId)
     if (events.size > 0) {
       // if events exists for this issueId => append new Commented event
@@ -81,11 +81,14 @@ trait IssueTracker { this: Log with IdentitySupplier =>
       )
       // append new events to the log
       append(newEvents)
+
+      val oldState: Issue = apply(initState)(events)
+      val newState: Issue = apply(oldState)(newEvents)
       // return events
-      newEvents
+      newEvents -> newState
     } else {
       // else return empty list
-      List()
+      List() -> Empty
     }
 
   }
@@ -171,4 +174,4 @@ trait IssueProjection extends Projection[Issue] {
 }
 
 
-object IssueTrackerImpl extends IssueTracker with InMemoryLog with UUIDNextId { }
+object IssueTrackerImpl extends IssueTracker with InMemoryLog with UUIDNextId with IssueProjection { }
