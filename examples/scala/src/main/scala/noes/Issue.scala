@@ -42,40 +42,37 @@ trait IssueTrackerRepository {
 /**
   * Issue tracker is the API representing the use case API.
   */
-trait IssueTracker {
+trait IssueTracker { this: IssueTrackerRepository =>
 
-  // The repositoty aka Data Access Object is used to execute CRUD operation against a database
-  protected val issueTrackerRepository: IssueTrackerRepository
-
-  def handle(submit: Submit): Issue = {
+  def handle(command: Submit): Issue = {
 
     // Validates the input parameters (author exists, repository exists and other business rules)
     // ..
 
     // Once validated create and issue
     val issue = Issue(
-      issueTrackerRepository.nextId(),                               // <-- assigning a new issue identifier and a title and a author to this model implicitly means that a issue has been created
-      submit.title,
-      UserId("123"),
-      Open,                                                          // <-- implicitly means the issue has been closed yet
-      submit.commentO.map ((c: String) => List(c)) getOrElse List(), // <-- implicitly means the issue has been commented
-      submit.assignees,                                              // <-- implicitly means the issue has been assigned
-      submit.milestones,                                             // <-- implicitly means the issue has been planned
-      submit.categories                                              // <-- implicitly means the issue has been categorized
+      nextId(), // <-- assigning a new issue identifier and a title and a author to this model implicitly means that a issue has been created
+      command.title,
+      command.authorId,
+      Open,                                                           // <-- implicitly means the issue has been closed yet
+      command.commentO.map ((c: String) => List(c)) getOrElse List(), // <-- implicitly means the issue has been commented
+      command.assignees,                                              // <-- implicitly means the issue has been assigned
+      command.milestones,                                             // <-- implicitly means the issue has been planned
+      command.categories                                              // <-- implicitly means the issue has been categorized
     )
 
     // persist it
-    issueTrackerRepository.persist(issue)
+    persist(issue)
 
     // return it
-    issue // <-- implicitly means all the events have been succe
+    issue // <-- implicitly means all the events have been successfully persisted
 
   }
 
   def handle(command: AddComment): Issue = {
 
     // fetch the issue from the database
-    val issue = issueTrackerRepository.find(command.issueId)
+    val issue = find(command.issueId)
 
     // apply business rules and append comment
     val updatedIssue = if (issue.status == Open) {
@@ -86,7 +83,7 @@ trait IssueTracker {
     }
 
     // persist it
-    issueTrackerRepository.update(updatedIssue)
+    update(updatedIssue)
 
    // return the persisted issue
     updatedIssue // <-- returning the issue means that it has been commented
@@ -96,11 +93,11 @@ trait IssueTracker {
 
 }
 
-case class Submit(title: String, commentO: Option[String], assignees: List[UserId], milestones: List[MilestoneId], categories: List[String])
+case class Submit(title: String, authorId: UserId, commentO: Option[String], assignees: List[UserId], milestones: List[MilestoneId], categories: List[String])
 case class AddComment(issueId: IssueId, comment: String)
 
 
-object InMemoryIssueTrackerRepository extends IssueTrackerRepository {
+trait InMemoryIssueTrackerRepository extends IssueTrackerRepository {
 
   var issues: Map[IssueId, Issue] = Map()
 
@@ -112,6 +109,4 @@ object InMemoryIssueTrackerRepository extends IssueTrackerRepository {
   override def find(issueId: IssueId) = issues get issueId get
 }
 
-object IssueTrackerImpl extends IssueTracker {
-  override val issueTrackerRepository = InMemoryIssueTrackerRepository
-}
+object IssueTrackerImpl extends IssueTracker with InMemoryIssueTrackerRepository { }

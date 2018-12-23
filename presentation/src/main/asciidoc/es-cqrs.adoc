@@ -69,10 +69,8 @@ Le composant qui va implémenter la logique business (le cas d'utilisation) est 
 [source,scala]
 ---
 def handle(submit: Submit): Issue = {
-
     // Validates the input parameters (author exists, repository exists and other business rules)
     // ..
-
     // Once validated create and issue
     val issue = Issue(
       issueTrackerRepository.nextId(),                               // <-- assigning a new issue identifier and a title and a author to this model implicitly means that a issue has been created
@@ -84,13 +82,10 @@ def handle(submit: Submit): Issue = {
       submit.milestones,                                             // <-- implicitly means the issue has been planned
       submit.categories                                              // <-- implicitly means the issue has been categorized
     )
-
     // persist it
     issueTrackerRepository.persist(issue)
-
     // return it
     issue // <-- implicitly means all the events have been succe
-
   }
 ---
 

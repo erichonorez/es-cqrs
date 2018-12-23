@@ -15,10 +15,6 @@ case class Assigned(issueId: IssueId, userId: UserId) extends Event
 case class Planned(issueId: IssueId, milestoneId: MilestoneId) extends Event
 case class Categorised(issueId: IssueId, label: String) extends Event
 
-// commands
-sealed trait Command
-case class Submit(title: String, commentO: Option[String], assignees: List[UserId], milestones: List[MilestoneId], categories: List[String]) extends Command
-case class AddComment(comment: String) extends Command
 
 sealed trait State { def id: IssueId }
 case class Empty(id: IssueId) extends State
@@ -67,3 +63,8 @@ trait IssueTracker {
   }
 
 }
+
+// commands
+sealed trait Command
+case class Submit(title: String, authorId: UserId commentO: Option[String], assignees: List[UserId], milestones: List[MilestoneId], categories: List[String]) extends Command
+case class AddComment(comment: String) extends Command
