@@ -1,19 +1,18 @@
 import org.scalatest.FreeSpec
 import org.scalatest.Matchers._
 
-class IssueTrackerSpec extends FreeSpec with IssueTracker {
+class IssueTrackerSpec extends FreeSpec with IssueTracker with InMemoryLog with UUIDNextId {
 
   "An issue tracker" - {
 
     val title = "This is my title"
     val defaultSubmit = Submit(title, None, List(), List(), List())
-    val initialState = Empty(IssueId("123"))
 
     "when the user submit an issue" - {
 
       "an issue should be created" - {
 
-        val result = handle(defaultSubmit)(initialState)
+        val result = handle(defaultSubmit)
         contains(created, result) should be (true)
 
       }
@@ -23,7 +22,7 @@ class IssueTrackerSpec extends FreeSpec with IssueTracker {
         "then the issue should be commented" in {
 
           val command = defaultSubmit.copy(commentO = Some("This is my comment"))
-          val result = handle(command)(initialState)
+          val result = handle(command)
           contains(commented, result) should be (true)
 
         }
@@ -35,7 +34,7 @@ class IssueTrackerSpec extends FreeSpec with IssueTracker {
         "then the issue should be planned" in {
 
           val command = defaultSubmit.copy(milestones = List(MilestoneId("123")))
-          val result = handle(command)(initialState)
+          val result = handle(command)
           contains(planned, result) should be (true)
         }
 
@@ -46,7 +45,7 @@ class IssueTrackerSpec extends FreeSpec with IssueTracker {
         "then the issue should be assigned" in {
 
           val command = defaultSubmit.copy(assignees = List(UserId("213")))
-          val result = handle(command)(initialState)
+          val result = handle(command)
           contains(assigned, result) should be (true)
 
         }
@@ -58,7 +57,7 @@ class IssueTrackerSpec extends FreeSpec with IssueTracker {
         "then the issue should be categorised" in {
 
           val command = defaultSubmit.copy(categories = List("todo"))
-          val result = handle(command)(initialState)
+          val result = handle(command)
           contains(categorised, result) should be (true)
 
         }
@@ -76,7 +75,7 @@ class IssueTrackerSpec extends FreeSpec with IssueTracker {
     "then the issue should be commented" in {
 
       val command = AddComment("This is another event in the conversation")
-      val result = handle(command)(existingIssue)
+      val result = handle(command)
       contains(commented, result) should be (true)
 
     }

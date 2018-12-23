@@ -40,7 +40,7 @@ trait IssueTrackerRepository {
 }
 
 /**
-  * Issue tracker is the API representing the use case API.
+  * Use cases implementation
   */
 trait IssueTracker { this: IssueTrackerRepository =>
 
