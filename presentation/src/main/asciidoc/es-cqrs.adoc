@@ -12,6 +12,15 @@ Un de ces systèmes nous est bien famillier, il s'agit de git. le log de git est
 
 L'event sourcing consiste à appliquer ce concept de log à la persistence de l'état d'une application. Au lieu d'enregistrer cet état dans des tables en base de données, on va simplement enregistrer la séquence des évènement qui ont modifié celui-ci. Lorsqu'on veut avoir l'état actuel du système, il suffit de récupérer les évènements et les appliquer à un état initial.
 
+== Pourquoi l'event sourcing?
+
+Le log des évènements qui se sont produits *permet de construire des vues différentes* de l'état d'un système. Prenons l'exemple des reportings et des dashboards que le business a besoin pour prendre des décisions. Tous ces graphiques et tableaux reflètent différentes visions d'un même système. Ils expriment les différents états du système, chacun sous un angle bien spécifique. L'état d'un système n'est qu'une projection spécifique d'un log. Il y a autant d'états qu'il y a de projections.
+
+Il permet également de faciliter l'intégration des données entre différents systèmes facilement. 
+
+Nous le verons plus tard mais l'event sourcing permet d'élaborer des stratégies pour scaler une application. 
+
+
 == Un exemple: l'issue tracker de github
 
 Nous allons mettre ce pattern en pratique en implémentant l'issue tracker de github. Voici une liste non-exhaustive des fonctionnalités exposées par ce module:
@@ -139,3 +148,24 @@ Connecte plus facile le langage business au code.
 == CQRS
 
 Si nous reprenons l'issue tracker de github, à chaque fois q'une issue est assignée ça veut dire que pour la vue "issue" il a un assignée qui est ajouté à la liste. Mais ça veut dire aussi que pour la vue "progression" les chiffres sont adaptés. Ca veut dire dans la liste des issue pour un milestone, une issue en plus est ajoutée. Pour un assignee, une nouvelle issue veut dire une nouvelle entrée quelque part dans son dashboard.
+
+
+
+
+== Summary
+
+Event sourcing est un pattern de persistence qui consiste à stocker la séries des évènements qui ont modifié l'état d'une application plutôt que de persister celui-ci.
+
+C'est quoi ?
+
+* Le log est la seule source de vérité;
+* A partir de cette source de vérité, l'état peut être reconstruit.
+
+Pourquoi ?
+
+* Audit trail. A chaque fois qu'une information est modifiée dans le système, elle est loggée par une évènement. Ce log est plus fiable que simplement un fichier de log car il est la seule source de vérité pour recontruire l'état d'un système.
+* Pas de perte d'information, les évènements sont exhaustifs; Permet de contruire différentes vues à partir de la série d'évènements;
+* Data stores != Inmemory state - Plus de problème d'ORM!
+* Permet de debugguer plus facilement; Replay events from prod in dev.
+* Query historiques
+*
