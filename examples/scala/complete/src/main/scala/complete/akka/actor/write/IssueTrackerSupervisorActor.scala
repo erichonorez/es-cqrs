@@ -3,6 +3,7 @@ package complete.akka.actor.write
 import java.util.UUID
 
 import akka.actor.{Actor, Props}
+import complete.akka.command.{AddComment, Close, Submit}
 import complete.cqrs.IssueId
 
 class IssueTrackerSupervisorActor extends Actor {

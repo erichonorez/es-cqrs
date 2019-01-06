@@ -42,7 +42,14 @@ trait IssueTrackerRepository {
 /**
   * Use cases
   */
-case class Submit(title: String, authorId: UserId, commentO: Option[String], assignees: List[UserId], milestones: List[MilestoneId], categories: List[String])
+case class Submit(
+                   title: String,
+                   authorId: UserId,
+                   commentO: Option[String],
+                   assignees: List[UserId],
+                   milestones: List[MilestoneId],
+                   categories: List[String]
+                 )
 case class AddComment(issueId: IssueId, comment: String)
 
 
@@ -72,7 +79,7 @@ trait IssueTracker { this: IssueTrackerRepository =>
     persist(issue)
 
     // return it
-    issue // <-- implicitly means all the events have been successfully persisted
+    issue // <-- implicitly means ???
 
   }
 

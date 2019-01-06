@@ -2,7 +2,7 @@ package complete.akka.actor.read
 
 import complete.cqrs._
 import akka.actor.{Actor, Props}
-import akka.query.{Issue, IssueProjection}
+import complete.akka.query.{Issue, IssueProjection}
 
 case class Get(issueId: IssueId)
 

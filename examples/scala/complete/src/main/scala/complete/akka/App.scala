@@ -2,10 +2,10 @@ package complete.akka
 
 import akka.pattern.ask
 import akka.actor.{ActorRef, ActorSystem}
-import akka.actor.read.{GetView, IssueViewSupervisorActor}
+import complete.akka.actor.read.{GetView, IssueViewSupervisorActor}
 import complete.cqrs._
-import akka.command._
-import akka.query.Issue
+import complete.akka.command._
+import complete.akka.query.Issue
 import akka.util.Timeout
 import complete.akka.actor.write.IssueTrackerSupervisorActor
 
