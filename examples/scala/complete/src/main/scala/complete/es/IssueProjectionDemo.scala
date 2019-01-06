@@ -1,10 +1,8 @@
-package complete.nviews
+package complete.es
 
 import java.util.UUID
 
-import complete.es._
-
-object IssueByIdDemo extends App with IssueProjection {
+object IssueProjectionDemo extends App with IssueProjection {
 
   private val issueId = IssueId(UUID.randomUUID().toString)
   private val authorId = UserId(UUID.randomUUID().toString)
@@ -31,6 +29,7 @@ object IssueByIdDemo extends App with IssueProjection {
   )
 
   private val issue: Issue = apply(initState(issueId))(events)
+
   pprint.pprintln(issue)
 
 }

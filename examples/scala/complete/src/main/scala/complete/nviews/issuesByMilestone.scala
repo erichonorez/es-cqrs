@@ -30,7 +30,7 @@ object IssuesByMilestone extends Projection[ViewState] {
     allIssues = Map.empty
   )
 
-  private def applySingle(s: ViewState, e: Event): ViewState = e match {
+  override def applySingle(s: ViewState, e: Event): ViewState = e match {
     case Created(issueId, _, title) => {
       s.allIssues += (issueId -> (MilestoneIssue(issueId, title), mutable.MutableList.empty))
       s
