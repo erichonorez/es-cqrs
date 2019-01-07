@@ -17,7 +17,7 @@ case class Existing(
                      labels: List[String]
                    ) extends Issue
 
-trait IssueProjection extends AggregateProjection[Issue, IssueId] {
+trait IssueProjection extends AggregateProjection[IssueId, Issue, Event] {
   override def initState(issueId: IssueId) = Empty(issueId)
 
   override def applySingle(state: Issue, event: Event): Issue = state match {

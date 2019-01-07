@@ -4,7 +4,6 @@ import java.util.UUID
 
 object DemoEs extends App {
 
-  object IssueTrackerImpl extends IssueTracker with InMemoryLog with UUIDNextId with IssueProjection with IssueValidation
 
 }
 
