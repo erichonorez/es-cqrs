@@ -1,5 +1,6 @@
 package complete.noes
 
+import complete.share.UserId
 import pprint._
 
 object Demo1 extends App {

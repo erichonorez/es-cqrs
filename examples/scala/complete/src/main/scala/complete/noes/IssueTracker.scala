@@ -2,16 +2,14 @@ package complete.noes
 
 import java.util.UUID
 
+import complete.share.{IssueId, MilestoneId, UserId}
+
 /**
   * This is an example of an issue tracker implementation without event sourcing.
   */
 trait IssueStatus
 object Open extends IssueStatus
 object Closed extends IssueStatus
-
-case class IssueId(value: String)
-case class UserId(value: String)
-case class MilestoneId(value: String)
 
 /**
   * Issue is an entity. It is fetched and persisted from the database using a {@link Issuetrackerrepository}.
@@ -42,10 +40,18 @@ trait IssueTrackerRepository {
 /**
   * Use cases
   */
-case class Submit(title: String, authorId: UserId, commentO: Option[String], assignees: List[UserId], milestones: List[MilestoneId], categories: List[String])
-case class AddComment(issueId: IssueId, comment: String)
-
-
+case class Submit(
+                   title: String,
+                   authorId: UserId,
+                   commentO: Option[String],
+                   assignees: List[UserId],
+                   milestones: List[MilestoneId],
+                   categories: List[String]
+                 )
+case class AddComment(
+                       issueId: IssueId,
+                       comment: String
+                     )
 /**
   * Use cases handler
   */
