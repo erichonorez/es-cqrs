@@ -15,7 +15,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object App {
 
   def main(args: Array[String]): Unit = {
-    val system = ActorSystem("complete.cqrs-scala")
+    val system = ActorSystem("cqrs")
 
     val issueViewSupervisor = system.actorOf(IssueViewSupervisorActor.props)
     system.eventStream.subscribe(issueViewSupervisor, classOf[Event])
